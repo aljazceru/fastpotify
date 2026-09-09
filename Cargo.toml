@@ -170,6 +170,59 @@ demo = []
 # libclang. `--no-default-features` leaves it out.
 milkdrop = ["dep:projectm-sys", "dep:winit", "dep:glutin", "dep:glutin-winit"]
 
+# The Linux release binaries wrapped as native packages by the release
+# workflow (cargo-deb and cargo-generate-rpm, on the runners that build
+# them). The binary is the tarball's, so the packages inherit the build's
+# baseline: Ubuntu 24.04's glibc, hence Debian 13 or Ubuntu 24.04 and up
+# for the .deb, and Fedora 41 and up for the .rpm.
+#
+# Depends lists what the binary links (the C++ runtime of the static
+# libprojectM, ALSA, and PulseAudio: the linker keeps only those; OpenGL is
+# loaded at run time) plus the Wayland, X11, and xkbcommon stacks the GUI
+# dlopens (see flake.nix's runtimeLibs), which a package manager cannot see.
+# Modern desktops already pull all of these in through their own
+# dependencies.
+[package.metadata.deb]
+maintainer = "Carmine Paolino <crmne@users.noreply.github.com>"
+section = "sound"
+# apt shows metadata as plain text, so the long description stays a
+# sentence; the README belongs in the doc directory.
+extended-description = "Fastpotify plays music on this computer through librespot and controls other Spotify Connect devices. Playback needs Spotify Premium."
+depends = "libasound2t64, libpulse0, libstdc++6, libgl1, libegl1, libwayland-client0, libwayland-cursor0, libwayland-egl1, libxkbcommon0, libxkbcommon-x11-0, libx11-6, libxcursor1, libxi6, libxrandr2"
+assets = [
+    ["target/release/fastpotify", "usr/bin/", "755"],
+    ["packaging/applications/fastpotify.desktop", "usr/share/applications/", "644"],
+    ["packaging/icons/fastpotify.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+]
+
+[package.metadata.generate-rpm]
+# Fedora splits the GL libraries across libglvnd-glx and libglvnd-egl, and
+# the X11 companion of xkbcommon into libxkbcommon-x11; the sonames the
+# binary links are covered by libstdc++, alsa-lib, and pulseaudio-libs, so
+# --auto-req no in the workflow keeps the list below exact.
+# requires maps package to version constraint; "*" is any.
+requires = {
+    "libstdc++" = "*",
+    "alsa-lib" = "*",
+    "pulseaudio-libs" = "*",
+    "libglvnd-glx" = "*",
+    "libglvnd-egl" = "*",
+    "libwayland-client" = "*",
+    "libwayland-cursor" = "*",
+    "libwayland-egl" = "*",
+    "libxkbcommon" = "*",
+    "libxkbcommon-x11" = "*",
+    "libX11" = "*",
+    "libXcursor" = "*",
+    "libXi" = "*",
+    "libXrandr" = "*",
+}
+assets = [
+    { source = "target/release/fastpotify", dest = "/usr/bin/fastpotify", mode = "755" },
+    { source = "packaging/applications/fastpotify.desktop", dest = "/usr/share/applications/fastpotify.desktop", mode = "644" },
+    { source = "packaging/icons/fastpotify.svg", dest = "/usr/share/icons/hicolor/scalable/apps/fastpotify.svg", mode = "644" },
+]
+
 [profile.release]
 lto = "thin"
 codegen-units = 1

@@ -69,6 +69,20 @@ jobs:
 
       - run: cargo build --release --target ${{ matrix.target }} ${{ matrix.features }}
 
+      # The tarball's Linux binary as apt and dnf packages. Both tools read
+      # it from target/release, the host build's path, so stage it there and
+      # let each runner package its own architecture. Depends and Requires
+      # live in Cargo.toml's metadata tables.
+      - name: Debian and RPM packages
+        if: runner.os == 'Linux'
+        run: |
+          cargo install --locked cargo-deb cargo-generate-rpm
+          mkdir -p target/release dist
+          cp "target/${{ matrix.target }}/release/fastpotify" target/release/
+          arch="${{ matrix.target }}"; arch="${arch%%-*}"
+          cargo deb --no-build -o "dist/fastpotify-${GITHUB_REF_NAME}-${arch}.deb"
+          cargo generate-rpm --auto-req no -o "dist/fastpotify-${GITHUB_REF_NAME}-${arch}.rpm"
+
       # The zip and installer must run on a clean Windows machine without a
       # separately installed Visual C++ redistributable.
       - name: Verify standalone Windows runtime
@@ -126,6 +140,8 @@ jobs:
             dist/*.tar.gz
             dist/*.zip
             dist/*-setup.exe
+            dist/*.deb
+            dist/*.rpm
           if-no-files-found: error
 
   macos:

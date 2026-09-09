@@ -101,6 +101,18 @@ A bundle does not update itself. Flathub support is planned.
 The bundle uses the same binary as the release tarball. Other stores use
 third-party packages. Report package-specific problems to their packagers.
 
+### Debian, Ubuntu, and Fedora
+
+The release carries native packages of the same binary, with the desktop
+entry and icon installed and the audio and windowing libraries pulled in
+automatically. They follow the build's baseline: Debian 13 or Ubuntu 24.04
+and newer for the `.deb`, Fedora 41 and newer for the `.rpm`.
+
+```sh
+sudo apt install ./fastpotify-vX.Y.Z-x86_64.deb    # or -aarch64, Debian and Ubuntu
+sudo dnf install ./fastpotify-vX.Y.Z-x86_64.rpm     # or -aarch64, Fedora
+```
+
 ### Other distributions
 
 - [fastpotify-v{{ v }}-x86_64-unknown-linux-gnu.tar.gz]({{ base }}/fastpotify-v{{ v }}-x86_64-unknown-linux-gnu.tar.gz)

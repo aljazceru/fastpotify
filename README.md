@@ -159,6 +159,22 @@ emerge --ask --autounmask-write media-sound/fastpotify::niko-overlays
 Review and apply any proposed keyword changes with `dispatch-conf`, then
 repeat the final `emerge` command.
 
+On Ubuntu 24.04 or Debian 13 and newer, download the `.deb` from the
+[releases page](https://github.com/crmne/fastpotify/releases) and:
+
+```bash
+sudo apt install ./fastpotify-vX.Y.Z-x86_64.deb
+```
+
+On Fedora 41 and newer, with the `.rpm` from the same page:
+
+```bash
+sudo dnf install ./fastpotify-vX.Y.Z-x86_64.rpm
+```
+
+Both install the desktop entry and icon, and pull in the audio and windowing
+libraries the app needs. The Flatpak covers other distributions.
+
 Everywhere else, build the single binary with Rust 1.95 or newer:
 
 ```bash
