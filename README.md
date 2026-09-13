@@ -163,13 +163,13 @@ On Ubuntu 24.04 or Debian 13 and newer, download the `.deb` from the
 [releases page](https://github.com/crmne/fastpotify/releases) and:
 
 ```bash
-sudo apt install ./fastpotify-vX.Y.Z-x86_64.deb
+sudo apt install ./fastpotify-vX.Y.Z-x86_64.deb    # use -aarch64 on ARM
 ```
 
 On Fedora 41 and newer, with the `.rpm` from the same page:
 
 ```bash
-sudo dnf install ./fastpotify-vX.Y.Z-x86_64.rpm
+sudo dnf install ./fastpotify-vX.Y.Z-x86_64.rpm    # use -aarch64 on ARM
 ```
 
 Both install the desktop entry and icon, and pull in the audio and windowing

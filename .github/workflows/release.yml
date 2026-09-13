@@ -20,7 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          # Pinned, not ubuntu-latest: the deb's and rpm's glibc baseline is
+          # this image's, and the README and Cargo.toml promise it.
+          - os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
           # A native arm64 runner, so the GUI's system libraries need no
           # cross-compilation sysroot.
@@ -76,7 +78,10 @@ jobs:
       - name: Debian and RPM packages
         if: runner.os == 'Linux'
         run: |
-          cargo install --locked cargo-deb cargo-generate-rpm
+          # Pinned so a tool release cannot change the packages an
+          # unchanged workflow produces; update deliberately, with a test
+          # release or a local package build.
+          cargo install --locked cargo-deb@3.8.0 cargo-generate-rpm@0.21.0
           mkdir -p target/release dist
           cp "target/${{ matrix.target }}/release/fastpotify" target/release/
           arch="${{ matrix.target }}"; arch="${arch%%-*}"
