@@ -200,28 +200,28 @@ assets = [
 # the X11 companion of xkbcommon into libxkbcommon-x11; the sonames the
 # binary links are covered by libstdc++, alsa-lib, and pulseaudio-libs, so
 # --auto-req no in the workflow keeps the list below exact.
-# requires maps package to version constraint; "*" is any.
-requires = {
-    "libstdc++" = "*",
-    "alsa-lib" = "*",
-    "pulseaudio-libs" = "*",
-    "libglvnd-glx" = "*",
-    "libglvnd-egl" = "*",
-    "libwayland-client" = "*",
-    "libwayland-cursor" = "*",
-    "libwayland-egl" = "*",
-    "libxkbcommon" = "*",
-    "libxkbcommon-x11" = "*",
-    "libX11" = "*",
-    "libXcursor" = "*",
-    "libXi" = "*",
-    "libXrandr" = "*",
-}
 assets = [
     { source = "target/release/fastpotify", dest = "/usr/bin/fastpotify", mode = "755" },
     { source = "packaging/applications/fastpotify.desktop", dest = "/usr/share/applications/fastpotify.desktop", mode = "644" },
     { source = "packaging/icons/fastpotify.svg", dest = "/usr/share/icons/hicolor/scalable/apps/fastpotify.svg", mode = "644" },
 ]
+
+# requires maps package to version constraint; "*" is any.
+[package.metadata.generate-rpm.requires]
+"libstdc++" = "*"
+"alsa-lib" = "*"
+"pulseaudio-libs" = "*"
+"libglvnd-glx" = "*"
+"libglvnd-egl" = "*"
+"libwayland-client" = "*"
+"libwayland-cursor" = "*"
+"libwayland-egl" = "*"
+"libxkbcommon" = "*"
+"libxkbcommon-x11" = "*"
+"libX11" = "*"
+"libXcursor" = "*"
+"libXi" = "*"
+"libXrandr" = "*"
 
 [profile.release]
 lto = "thin"
